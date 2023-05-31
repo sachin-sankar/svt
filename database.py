@@ -46,17 +46,13 @@ def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber
   soldOn = date.today()
   soldLocation = ''
   transferDone = 'f'
-  insuranceDate = date.today()
-  pollutionDate = date.today()
+  insuranceDate = date.fromisoformat(insuranceDate)
+  pollutionDate = date.fromisoformat(pollutionDate)
   fine = 'No fines'
   expenses = 0
   salePrice = 0
   remarks = 'No remarks'
-  try:
-    return Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,purchasePrice=purchasePrice,expenses=expenses,salePrice=salePrice,remarks=remarks).save(force_insert=True)
-    return True
-  except Exception as error:
-    return str(error)
+  return Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,purchasePrice=purchasePrice,expenses=expenses,salePrice=salePrice,remarks=remarks).save(force_insert=True)
 
 def resp(data):
   resp = []
@@ -80,3 +76,19 @@ def searchCars(searchText):
   return resp(Cars.select().where(
     (Cars.model.contains(searchText))|(Cars.modelYear.contains(searchText))|
     (Cars.color.contains(searchText))|(Cars.number.contains(searchText))))
+
+def editRemarks(number,newRemarks):
+  Cars.update(remarks=newRemarks).where(Cars.number == number)
+  return True
+
+def editExpenses(number,newExpenses):
+  Cars.update(expenses=newExpenses).where(Cars.number == number)
+  return True
+
+def sellCar(number,soldTo,soldOn,soldLocation,transferDone,insuranceDate,pollutionDate,expenses,salePrice,remarks):
+  insuranceDate = date.fromisoformat(insuranceDate)
+  pollutionDate = date.fromisoformat(pollutionDate)
+  soldOn = date.fromisoformat(soldOn)
+  Cars.update(soldTo=soldTo,soldOn=soldOn,soldLocation=soldLcation,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,expenses=expenses,salePrice=salePrice,remarks=remarks).where(Cars.number = number)
+  return True
+  
