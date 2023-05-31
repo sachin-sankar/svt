@@ -1,11 +1,16 @@
 from json import load
-from database import purchaseCar , getAllCars
+import database
 
 '''
 with open('Svt Purchase (1).json','r') as file:
   data = load(file)
 
 for i in data:
-  purchaseCar(**i)
+  print(purchaseCar(**i))
 '''
-print(getAllCars())
+print(len(database.getAllCars()))
+print(len(database.getUnsoldCars()))
+print(len(database.getUntransferedCars()))
+
+while True:
+  print(database.searchCars(input('::> ')))

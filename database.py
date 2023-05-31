@@ -1,4 +1,5 @@
 from peewee import *
+from playhouse.shortcuts import model_to_dict
 from datetime import date
 from helper import validateCarNumber
 db = SqliteDatabase('svt.db')
@@ -52,10 +53,30 @@ def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber
   salePrice = 0
   remarks = 'No remarks'
   try:
-    Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,purchasePrice=purchasePrice,expenses=expenses,salePrice=salePrice,remarks=remarks).save()
+    return Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,purchasePrice=purchasePrice,expenses=expenses,salePrice=salePrice,remarks=remarks).save(force_insert=True)
     return True
   except Exception as error:
     return str(error)
 
+def resp(data):
+  resp = []
+  for i in data:
+    resp.append(model_to_dict(i))
+  return resp
+
+def getCar(number):
+  return resp(Cars.select().where(Cars.number == number))
+
 def getAllCars():
-  return db.select()
+  return resp(Cars.select())
+    
+def getUnsoldCars():
+  return resp(Cars.select().where(Cars.salePrice == 0))
+
+def getUntransferedCars():
+  return resp(Cars.select().where(Cars.transferDone == 'f'))
+
+def searchCars(searchText):
+  return resp(Cars.select().where(
+    (Cars.model.contains(searchText))|(Cars.modelYear.contains(searchText))|
+    (Cars.color.contains(searchText))|(Cars.number.contains(searchText))))
