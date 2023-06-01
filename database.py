@@ -1,7 +1,7 @@
 from peewee import *
 from playhouse.shortcuts import model_to_dict
 from datetime import date
-from helper import validateCarNumber
+from helper import validateCarNumber , parseCarNumber
 db = SqliteDatabase('svt.db')
 
 class Cars(Model):
@@ -57,7 +57,9 @@ def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber
 def resp(data):
   resp = []
   for i in data:
-    resp.append(model_to_dict(i))
+    i = model_to_dict(i)
+    i['numberHuman'] = parseCarNumber(i['number'])
+    resp.append(i)
   return resp
 
 def getCar(number):
@@ -85,10 +87,17 @@ def editExpenses(number,newExpenses):
   Cars.update(expenses=newExpenses).where(Cars.number == number)
   return True
 
+def transferCar(number):
+  Cars.update(transferDone='t').where(Cars.number == number)
+  return True
+
 def sellCar(number,soldTo,soldOn,soldLocation,transferDone,insuranceDate,pollutionDate,expenses,salePrice,remarks):
   insuranceDate = date.fromisoformat(insuranceDate)
   pollutionDate = date.fromisoformat(pollutionDate)
   soldOn = date.fromisoformat(soldOn)
-  Cars.update(soldTo=soldTo,soldOn=soldOn,soldLocation=soldLcation,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,expenses=expenses,salePrice=salePrice,remarks=remarks).where(Cars.number = number)
+  Cars.update(soldTo=soldTo,soldOn=soldOn,soldLocation=soldLcation,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,expenses=expenses,salePrice=salePrice,remarks=remarks).where(Cars.number == number)
   return True
-  
+
+def deleteCar(number):
+  Cars.delete().where(Cars.number == number)
+  return True

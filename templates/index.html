@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mt-3">
+    <div class="row gap-1 m-1"><button class="btn btn-success btn-lg col">
+        <div class="d-inline-flex align-items-center gap-1">
+          <i class="fa-solid fa-car-side"></i>
+          <span>New Purchase</span>
+        </div>
+      </button>
+      <button class="btn btn-danger btn-lg col">
+        <div class="d-inline-flex align-items-center gap-1">
+          <i class="fa-solid fa-car-on"></i>
+          <span>New Sale</span>
+        </div>
+      </button>
+    </div>
+    <div class="row gap-1 m-1">
+      <button class="btn btn-primary btn-lg col">
+        <div class="d-inline-flex align-items-center gap-1">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>Search Cars</span>
+        </div>
+      </button>
+      <button class="btn btn-primary btn-lg col">
+        <div class="d-inline-flex align-items-center gap-1">
+          <i class="fa-solid fa-people-arrows"></i>
+          <span>TO Car</span>
+        </div>
+      </button>
+    </div>
+    <div class="row gap-1 m-1">
+      <button class="btn btn-info btn-lg col">
+        <div class="d-inline-flex align-items-center gap-1">
+          <i class="fa-solid fa-cloud-arrow-down"></i>
+          <span>Download</span>
+        </div>
+      </button>
+      <button class="btn btn-info btn-lg col">
+        <div class="d-inline-flex align-items-center gap-1">
+          <i class="fa-solid fa-print"></i>
+          <span>Print</span>
+        </div>
+      </button>
+    </div>
+  </div>
+  <h4 class="ms-2 my-2 fw-semibold">Available Cars</h4>
+  <div class="d-flex overflow-x-scroll flex-wrap gap-1 ms-2">
+    {% for car in unsoldCars %}
+    <div class="card bg-dark border border-secondary m-1 text-white">
+      <div class="card-body">
+        <h4 class="card-title fw-bold ">{{ car['model'] }}</h4>
+        <h5 class="card-subtitle"><span class="badge bg-white text-black">{{ car['numberHuman'] }}</span></h5>
+        <p class="mt-1 fs-5"><i class="fa-solid fa-calendar-days text-primary"></i> {{ car['modelYear'] }} <br> <i
+            class="fa-solid fa-gauge-high text-success"></i> {{ car['odometer'] }} KM</p>
+        <a href="/car/{{ car['number'] }}" class="card-link btn btn-secondary">
+          <div class='d-inline-flex gap-1 align-items-center'>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            <span>View Car</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+    
+  </div>
+  <h4 class="ms-2 my-2 fw-semibold">TO Cars</h4>
+  <div class="d-flex flex-wrap gap-1 ms-2">
+    {% for car in unTransferedCars %}
+    <div class="card bg-dark border border-secondary m-1 text-white">
+      <div class="card-body">
+        <h4 class="card-title fw-bold ">{{ car['model'] }}</h4>
+        <h5 class="card-subtitle"><span class="badge bg-white text-black">{{ car['numberHuman'] }}</span></h5>
+        <a href="/car/{{ car['number'] }}/to" class="card-link btn btn-secondary mt-1">
+          <div class='d-inline-flex gap-1 align-items-center '>
+            <i class="fa-solid fa-people-arrows"></i>
+            <span>TO Car</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% endblock content %}

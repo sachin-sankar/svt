@@ -1,16 +1,15 @@
-from json import load
+from flask import Flask, Request, render_template
+from flask_cors import CORS
 import database
 
-'''
-with open('Svt Purchase (1).json','r') as file:
-  data = load(file)
+app = Flask('Svt')
+CORS(app)
 
-for i in data:
-  print(purchaseCar(**i))
-'''
-print(len(database.getAllCars()))
-print(len(database.getUnsoldCars()))
-print(len(database.getUntransferedCars()))
 
-while True:
-  print(database.searchCars(input('::> ')))
+@app.route('/')
+def homePage():
+  return render_template('index.html',
+                         unsoldCars=database.getUnsoldCars(),unTransferedCars=database.getUntransferedCars())
+
+
+app.run('0.0.0.0', port=8080)
