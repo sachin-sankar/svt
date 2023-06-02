@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class='text-center mt-4'><i class="fa-solid fa-money-bill-transfer"></i> Sell a car</h1>
+  <div class='mx-5 my-2 bg-white text-black fw-bold fs-3 rounded text-center p-2'>
+    {{ car['numberHuman'] }}
+  </div>
+  <h5 class='ms-2 text-center'>{{ car['model'] }}</h5>
+  <div class='m-4'>
+    <form action='/cars/{{ car["number"] }}/sell/api' method='post'>
+      <div class='my-2'>
+        <label for='soldTo' class='form-label'>Sold To</label>
+        <input type='text' id='soldTo' name='soldTo' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='soldOn' class='form-label'>Sold On</label>
+        <input type='date' id='soldOn' name='soldOn' value='2020-02-02' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='soldLocation' class='form-label'>Sold Location</label>
+        <input type='text' id='soldLocation' name='soldLocation' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='salePrice' class='form-label'>Sale Price</label>
+        <input type='number' id='salePrice' name='salePrice' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='insuranceDate' class='form-label'>Insurance Date</label>
+        <input type='date' id='insuranceDate' name='insuranceDate' value='{{ car["insuranceDate"] }}' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='pollutionDate' class='form-label'>Pollution Date</label>
+        <input type='date' id='pollutionDate' name='pollutionDate' value='{{ car["pollutionDate"] }}' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='expenses' class='form-label'>Expenses</label>
+        <input type='number' id='expenses' name='expenses' class='form-control' required value='{{ car["expenses"] }}'>
+      </div>
+      <div class='my-2'>
+        <label for="exampleFormControlTextarea1" class="form-label">Remarks</label>
+  <textarea class="form-control" id="exampleFormControlTextarea1" name='remarks' required></textarea>
+      </div>
+      <div class='my-2 mt-4 d-flex gap-1 align-items-center justify-content-center'>
+        <button class='btn btn-primary' type='submit'>
+          <i class="fa-solid fa-circle-check"></i> Sell This Car
+        </button>
+        <button class='btn btn-danger' onclick='window.location = "/"'>
+          <i class="fa-solid fa-ban"></i> Cancel Sale
+        </button>
+      </div>
+    </form>
+  </div>
+  <script>
+    window.onload = setremarks
+    function setremarks() {
+      var ele = document.getElementById('exampleFormControlTextarea1')
+      ele.value = '{{ car["remarks"] }}'
+    }
+  </script>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class='text-center mt-4'><i class="fa-solid fa-magnifying-glass"></i> Search a Car</h1>
+  <div class='mx-3 d-flex justify-content-center align-items-center gap-1'>
+    <input type="text" id='searchInput' class='form-control'>
+    <button class='btn btn-success' onclick='search()'>Search</button>
+  </div>
+<div class="d-flex overflow-x-scroll flex-wrap gap-1 m-4">
+    {% for car in cars %}
+    <div class="card bg-dark border border-secondary m-1 text-white">
+      <div class="card-body">
+        <h4 class="card-title fw-bold ">{{ car['model'] }}</h4>
+        <h5 class="card-subtitle"><span class="badge bg-white text-black">{{ car['numberHuman'] }}</span></h5>
+        <p class="mt-1 fs-5"><i class="fa-solid fa-calendar-days text-primary"></i> {{ car['modelYear'] }} <br> <i
+            class="fa-solid fa-gauge-high text-success"></i> {{ car['odometer'] }} KM</p>
+        <a href="/cars/{{ car['number'] }}" class="card-link btn btn-secondary">
+          <div class='d-inline-flex gap-1 align-items-center'>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            <span>View Car</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+    
+  </div>
+  <script>
+    function search() {
+      var ele = document.getElementById('searchInput')
+      window.location = '/cars/search/' + ele.value
+    }
+  </script>
+{% endblock content %}

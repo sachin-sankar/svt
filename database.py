@@ -59,6 +59,7 @@ def resp(data):
   for i in data:
     i = model_to_dict(i)
     i['numberHuman'] = parseCarNumber(i['number'])
+    i['remarks'] = i['remarks'].replace('\n','')
     resp.append(i)
   return resp
 
@@ -72,32 +73,33 @@ def getUnsoldCars():
   return resp(Cars.select().where(Cars.salePrice == 0))
 
 def getUntransferedCars():
-  return resp(Cars.select().where(Cars.transferDone == 'f'))
+  return resp(Cars.select().where(Cars.salePrice != 0, Cars.transferDone == 'f'))
 
 def searchCars(searchText):
   return resp(Cars.select().where(
     (Cars.model.contains(searchText))|(Cars.modelYear.contains(searchText))|
     (Cars.color.contains(searchText))|(Cars.number.contains(searchText))))
 
-def editRemarks(number,newRemarks):
-  Cars.update(remarks=newRemarks).where(Cars.number == number)
-  return True
-
-def editExpenses(number,newExpenses):
-  Cars.update(expenses=newExpenses).where(Cars.number == number)
+def editCar(number,newExpenses,newRemarks):
+  q = Cars.update(remarks=newRemarks,expenses=newExpenses)
+  q.where(Cars.number == number).execute()
+  db.commit()
   return True
 
 def transferCar(number):
-  Cars.update(transferDone='t').where(Cars.number == number)
+  Cars.update(transferDone='t').where(Cars.number == number).execute()
+  db.commit()
   return True
 
-def sellCar(number,soldTo,soldOn,soldLocation,transferDone,insuranceDate,pollutionDate,expenses,salePrice,remarks):
+def sellCar(number,soldTo,soldOn,soldLocation,insuranceDate,pollutionDate,expenses,salePrice,remarks):
   insuranceDate = date.fromisoformat(insuranceDate)
   pollutionDate = date.fromisoformat(pollutionDate)
   soldOn = date.fromisoformat(soldOn)
-  Cars.update(soldTo=soldTo,soldOn=soldOn,soldLocation=soldLcation,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,expenses=expenses,salePrice=salePrice,remarks=remarks).where(Cars.number == number)
+  Cars.update(soldTo=soldTo,soldOn=soldOn,soldLocation=soldLocation,insuranceDate=insuranceDate,pollutionDate=pollutionDate,expenses=expenses,salePrice=salePrice,remarks=remarks).where(Cars.number == number).execute()
+  db.commit()
   return True
 
 def deleteCar(number):
-  Cars.delete().where(Cars.number == number)
+  Cars.delete().where(Cars.number == number).execute()
+  db.commit()
   return True
