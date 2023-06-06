@@ -13,7 +13,7 @@
       </div>
       <div class='my-2'>
         <label for='soldOn' class='form-label'>Sold On</label>
-        <input type='date' id='soldOn' name='soldOn' value='2020-02-02' class='form-control' required>
+        <input type='date' id='soldOn' name='soldOn' class='form-control' required>
       </div>
       <div class='my-2'>
         <label for='soldLocation' class='form-label'>Sold Location</label>
@@ -22,6 +22,10 @@
       <div class='my-2'>
         <label for='salePrice' class='form-label'>Sale Price</label>
         <input type='number' id='salePrice' name='salePrice' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='saleReference' class='form-label'>Sale Reference</label>
+        <input type='text' id='saleReference' name='saleReference' class='form-control' required>
       </div>
       <div class='my-2'>
         <label for='insuranceDate' class='form-label'>Insurance Date</label>
@@ -54,6 +58,10 @@
     function setremarks() {
       var ele = document.getElementById('exampleFormControlTextarea1')
       ele.value = '{{ car["remarks"] }}'
+      var today = new Date()
+      today = today.toISOString().split('T')[0]
+      console.log(today)
+      document.getElementById('soldOn').value = today
     }
   </script>
 {% endblock %}

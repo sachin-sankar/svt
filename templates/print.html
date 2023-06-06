@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Svt Cars</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/f2ae8f17b1.js" crossorigin="anonymous"></script>
+</head>
+
+<body onload="window.print()">
+  <div class=" mt-4 pb-2 text-5xl text-center font-bold border-b-2">Viswa Cars</div>
+  <div class="flex justify-between align-center">
+    <div class="mt-4 ms-2 flex flex-col">
+      <span class="text-3xl font-bold">{{ car['model'] }}</span>
+      <span class="text-2xl">{{ car['numberHuman'] }}</span>
+    </div>
+    <img
+      src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://viswacars.pythonanywhere.com/cars/{{ car['number'] }}"
+      class="m-3">
+  </div>
+  <div class="mt-5 m-2 grid grid-cols-2 grid-rows-2 gap-1">
+    <div class="flex flex-col gap-2">
+      <span class="text-xl font-bold"><i class="fa-solid fa-circle-info "></i> Basic Info</span>
+      <table class=" border-collapse">
+        <tbody>
+          <tr>
+            <td class="border border-slate-300 p-1">Model Year</td>
+            <td class="border border-slate-300 p-1">{{ car['modelYear'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Odometer</td>
+            <td class="border border-slate-300 p-1">{{ car['odometer'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Color</td>
+            <td class="border border-slate-300 p-1">{{ car['color'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Fuel Type</td>
+            <td class="border border-slate-300 p-1">{{ car['fuelType'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Transmission Type</td>
+            <td class="border border-slate-300 p-1">{{ car['transmissionType'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Engine Number</td>
+            <td class="border border-slate-300 p-1">{{ car['engineNumber'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Chassis Number</td>
+            <td class="border border-slate-300 p-1">{{ car['chassisNumber'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Insurance Date</td>
+            <td class="border border-slate-300 p-1">{{ car['insuranceDate'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Pollution Date</td>
+            <td class="border border-slate-300 p-1">{{ car['pollutionDate'] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="flex flex-col gap-2">
+      <span class="text-xl font-bold"><i class="fa-solid fa-cash-register"></i> Purchase Info</span>
+      <table class=" border-collapse">
+        <tbody>
+          <tr>
+            <td class="border border-slate-300 p-1">Purchase From</td>
+            <td class="border border-slate-300 p-1">{{ car['purchasedFrom'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Purchase On</td>
+            <td class="border border-slate-300 p-1">{{ car['purchasedOn'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Purchase Location</td>
+            <td class="border border-slate-300 p-1">{{ car['purchaseLocation'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Purchase Reference</td>
+            <td class="border border-slate-300 p-1">{{ car['purchaseReference'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Owner Number</td>
+            <td class="border border-slate-300 p-1">{{ car['ownerNumber'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Remarks</td>
+            <td class="border border-slate-300 p-1 break-all">{{ car['remarks'] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="flex flex-col gap-2">
+      <span class="text-xl font-bold"><i class="fa-solid fa-money-bill-transfer"></i> Sale Info</span>
+      <table class=" border-collapse">
+        <tbody>
+          <tr>
+            <td class="border border-slate-300 p-1">Sale To</td>
+            <td class="border border-slate-300 p-1">{{ car['soldTo'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Sale On</td>
+            <td class="border border-slate-300 p-1">{{ car['soldOn'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Sale Location</td>
+            <td class="border border-slate-300 p-1">{{ car['soldLocation'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Sale Reference</td>
+            <td class="border border-slate-300 p-1">{{ car['saleReference'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Transfer Done</td>
+            <td class="border border-slate-300 p-1">{% if car['transferDone'] == 't' %}
+            Yes
+              {% else %}
+              No
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class=" flex flex-col mt-3">
+      <div class="flex gap-1 justify-center">
+        <span class="text-xl font-bold"><i class="fa-solid fa-receipt"></i> Summary</span>
+      </div>
+      <table class="mx-auto mt-3">
+        <tbody>
+          <tr>
+            <td class="text-xl font-bold pr-2">Purchase Price</td>
+            <td>₹ {{ car['purchasePrice'] }}</td>
+          </tr>
+          <tr>
+            <td class="text-xl font-bold pr-2">Expenses</td>
+            <td>₹ {{ car['expenses'] }}</td>
+          </tr>
+          <tr>
+            <td class="text-xl font-bold pr-2">Sale Price</td>
+            <td>₹ {{ car['salePrice'] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</body>
+
+</html>

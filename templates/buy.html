@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class='text-center mt-4'><i class="fa-solid fa-cash-register"></i> New purchase</h1>
+  <div class='m-4'>
+    <form action='/cars/buy/api' method='post'>
+      <div class='my-2'>
+        <label for='carNumber' class='form-label'>Car Number</label>
+        <input type='text' id='carNumber' name='number' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='model' class='form-label'>Model</label>
+        <input type='text' id='model' name='model' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='modelYear' class='form-label'>Model Year</label>
+        <input type='number' min="1999" max="9999" id='modelYear' name='modelYear' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='odometer' class='form-label'>Odometer</label>
+        <input type='text' id='odometer' name='odometer' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='color' class='form-label'>Color</label>
+        <input type='text' id='color' name='color' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='engineNumber' class='form-label'>Engine Number</label>
+        <input type='text' id='engineNumber' name='engineNumber' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='chassisNumber' class='form-label'>Chassis Number</label>
+        <input type='text' id='chassisNumber' name='chassisNumber' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='fuelType' class='form-label'>Fuel Type</label>
+        <input type='text' id='fuelType' name='fuelType' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='transmissionType' class='form-label'>Transmission type</label>
+        <input type='text' id='transmissionType' name='transmissionType' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='purchasedFrom' class='form-label'>Purchased From</label>
+        <input type='text' id='purchasedFrom' name='purchasedFrom' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='purchasedOn' class='form-label'>Purchased On</label>
+        <input type='date' id='purchasedOn' name='purchasedOn' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='purchaseLocation' class='form-label'>Purchase Location</label>
+        <input type='text' id='purchaseLocation' name='purchaseLocation' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='purchasePrice' class='form-label'>Purchase Price</label>
+        <input type='number' id='purchasePrice' name='purchasePrice' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='purchaseReference' class='form-label'>Purchase Reference</label>
+        <input type='text' id='purchaseReference' name='purchaseReference' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='ownerNumber' class='form-label'>Owner Number</label>
+        <input type='number' id='ownerNumber' name='ownerNumber' class='form-control' min=0 max=9 required>
+      </div>
+      <div class='my-2'>
+        <label for='insuranceDate' class='form-label'>Insurance Date</label>
+        <input type='date' id='insuranceDate' name='insuranceDate' class='form-control' required>
+      </div>
+      <div class='my-2'>
+        <label for='pollutionDate' class='form-label'>Pollution Date</label>
+        <input type='date' id='pollutionDate' name='pollutionDate' class='form-control' required>
+      </div>
+      <div class='my-2 mt-4 d-flex gap-1 align-items-center justify-content-center'>
+        <button class='btn btn-success' type='submit'>
+          <i class="fa-solid fa-circle-check"></i> Buy Car
+        </button>
+        <button class='btn btn-danger' onclick='window.location = "/"'>
+          <i class="fa-solid fa-ban"></i> Cancel Purchase
+        </button>
+      </div>
+    </form>
+  </div>
+  <script>
+    window.onload = setremarks
+    function setremarks() {
+      var today = new Date()
+      today = today.toISOString().split('T')[0]
+      console.log(today)
+      document.getElementById('purchasedOn').value = today
+      document.getElementById('insuranceDate').value = today
+      document.getElementById('pollutionDate').value = today
+    }
+  </script>
+{% endblock content %}

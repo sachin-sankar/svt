@@ -1,6 +1,8 @@
 from flask import Flask, request, render_template, redirect , send_file
 from flask_cors import CORS
 import database
+from csv import writer
+from datetime import date
 
 app = Flask('Svt')
 CORS(app)
@@ -43,8 +45,39 @@ def sellCarEndpoint(car):
 @app.route('/cars/search/<term>')
 def searchPage(term):
   return render_template('search.html',cars = database.searchCars(term))
-app.run('0.0.0.0', port=8080)
 
 @app.route('/cars/download')
 def download():
+  cars = database.getAllCars()
+  fname = f'Vishva Cars - {date.today().strftime("%d-%m-%Y")}.csv'
+  with open(fname,'w') as file:
+    csvFile = writer(file)
+    csvFile.writerow(list(cars[0].keys()))
+    cars = [i.values() for i in cars]
+    csvFile.writerows(cars)
+  return send_file(fname,as_attachment=True)
+
+@app.route('/cars/buy')
+def buyPage():
+  return render_template('buy.html')
+
+@app.route('/cars/buy/api',methods=['POST'])
+def buyEndpoint():
+  data = request.form.to_dict()
+  car = database.purchaseCar(**data)
+  return redirect(f'/cars/{car}')
+
+@app.route('/cars/<car>/print')
+def printPage(car):
+  return render_template('print.html',car=database.getCar(car)[0])
+
+@app.route('/cars/<car>/delete')
+def deleteCar(car):
+  database.deleteCar(car)
+  return redirect('/')
   
+@app.route('/ping')
+def ping():
+  return 'pong'
+
+app.run('0.0.0.0', port=8080)

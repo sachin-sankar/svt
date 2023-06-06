@@ -12,6 +12,8 @@ class Cars(Model):
   color = TextField()
   engineNumber = TextField()
   chassisNumber = TextField()
+  fuelType = TextField()
+  transmissionType = TextField()
   purchasedFrom = TextField()
   purchasedOn = DateField()
   purchaseLocation = TextField()
@@ -20,6 +22,7 @@ class Cars(Model):
   soldTo = TextField()
   soldOn = DateField()
   soldLocation = TextField()
+  saleReference = TextField()
   transferDone = TextField()
   insuranceDate = DateField()
   pollutionDate = DateField()
@@ -35,7 +38,8 @@ class Cars(Model):
 db.connect()
 db.create_tables([Cars])
 
-def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber,purchasedFrom,purchasedOn,purchaseLocation,purchaseReference,ownerNumber,purchasePrice):
+def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber,fuelType,transmissionType,purchasedFrom,purchasedOn,purchaseLocation,purchaseReference,ownerNumber,purchasePrice,insuranceDate,pollutionDate):
+  number = number.strip().replace(' ','').lower()
   if not validateCarNumber(number):
     return 'Invalid Car Number'
   modelYear = str(modelYear)
@@ -45,6 +49,7 @@ def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber
   soldTo = ''
   soldOn = date.today()
   soldLocation = ''
+  saleReference = ''
   transferDone = 'f'
   insuranceDate = date.fromisoformat(insuranceDate)
   pollutionDate = date.fromisoformat(pollutionDate)
@@ -52,7 +57,8 @@ def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber
   expenses = 0
   salePrice = 0
   remarks = 'No remarks'
-  return Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,purchasePrice=purchasePrice,expenses=expenses,salePrice=salePrice,remarks=remarks).save(force_insert=True)
+  Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,purchasePrice=purchasePrice,expenses=expenses,salePrice=salePrice,remarks=remarks,fuelType=fuelType,transmissionType = transmissionType,saleReference=saleReference).save(force_insert=True)
+  return number
 
 def resp(data):
   resp = []
@@ -60,6 +66,7 @@ def resp(data):
     i = model_to_dict(i)
     i['numberHuman'] = parseCarNumber(i['number'])
     i['remarks'] = i['remarks'].replace('\n','')
+    i['message'] = f"*{i['model']}*\n📅 {i['modelYear']} model \n🔢 {i['odometer']} KM \n 🎨 {i['color']} color.\n 👤 {i['ownerNumber']} owner"
     resp.append(i)
   return resp
 
@@ -91,11 +98,11 @@ def transferCar(number):
   db.commit()
   return True
 
-def sellCar(number,soldTo,soldOn,soldLocation,insuranceDate,pollutionDate,expenses,salePrice,remarks):
+def sellCar(number,soldTo,soldOn,soldLocation,insuranceDate,pollutionDate,expenses,salePrice,remarks,saleReference):
   insuranceDate = date.fromisoformat(insuranceDate)
   pollutionDate = date.fromisoformat(pollutionDate)
   soldOn = date.fromisoformat(soldOn)
-  Cars.update(soldTo=soldTo,soldOn=soldOn,soldLocation=soldLocation,insuranceDate=insuranceDate,pollutionDate=pollutionDate,expenses=expenses,salePrice=salePrice,remarks=remarks).where(Cars.number == number).execute()
+  Cars.update(soldTo=soldTo,soldOn=soldOn,soldLocation=soldLocation,insuranceDate=insuranceDate,pollutionDate=pollutionDate,expenses=expenses,salePrice=salePrice,remarks=remarks,saleReference=saleReference).where(Cars.number == number).execute()
   db.commit()
   return True
 
