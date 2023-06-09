@@ -64,12 +64,20 @@
           <td>{{ car['chassisNumber'] }}</td>
         </tr>
         <tr>
+          <td><i class="fa-solid fa-screwdriver-wrench"></i></i> Service History</td>
+          <td>{{ car['serviceHistory'] }}</td>
+        </tr>
+        <tr>
           <td><i class="fa-solid fa-gas-pump"></i> Fuel Type</td>
           <td>{{ car['fuelType'] }}</td>
         </tr>
         <tr>
           <td><i class="fa-solid fa-gears"></i> Transmission Type</td>
           <td>{{ car['transmissionType'] }}</td>
+        </tr>
+      <tr>
+          <td><i class="fa-solid fa-car-burst"></i> Fine</td>
+          <td>{{ car['fine'] }}</td>
         </tr>
         <tr>
           <td><i class="fa-solid fa-user-plus"></i> Purchased From</td>
@@ -116,6 +124,12 @@
           <td><i class="fa-solid fa-user-tag"></i> Sale Reference</td>
           <td>{{ car['saleReference'] }}</td>
         </tr>
+      {% if car['salePrice'] != 0 and car['transferDone'] == 't' %}
+      <tr>
+          <td><i class="fa-solid fa-calendar-day"></i> Transfer Date</td>
+          <td>{{ car['transferDate'] }}</td>
+        </tr>
+      {% endif %}
       {% endif %}
       </tbody>
     </table>
@@ -151,7 +165,7 @@
       <i class="fa-regular fa-trash-can"></i>
       Delete Car
     </button>
-    <button class='btn btn-light btn-sm m-1 btn-warning' onclick="navigator.share({text: `{{ car['message'] }}`})">
+    <button class='btn btn-light btn-sm m-1 btn-warning' onclick="showMenu('shareCar')">
       <i class="fa-solid fa-share-nodes"></i>
       Share Car
     </button>
@@ -171,6 +185,49 @@
       </form>
     </div>
   </div>
+    <div class='m-2 card bg-dark text-white d-none' id='shareCar'>
+    <div class="card-body">
+      <h4 class="card-title">Share Car</h4>
+      <form action="javascript:void(0);">
+        <label for="priceInput" class="form-label">Sale Price</label>
+        <input type="number" class="form-control" id="priceInput" required>
+        <label for="tyreInput" class="form-label">Tyre Percentage</label>
+        <input type="number" class="form-control" id="tyreInput" required min=10 max=100>
+        <div class="form-check mx-1">
+          <input class="form-check-input" type="checkbox" value="" id="numberCheck">
+          <label class="form-check-label" for="numberCheck">
+            Add Car Number
+          </label>
+        </div>
+        <div class="form-check mx-1">
+          <input class="form-check-input" type="checkbox" value="yes" id="cnumberCheck">
+          <label class="form-check-label" for="cnumberCheck">
+            Add Phone Number
+          </label>
+        </div>
+        <div class="form-check mx-1">
+          <input class="form-check-input" type="checkbox" value="" id="companyCheck">
+          <label class="form-check-label" for="companyCheck">
+            Service History
+          </label>
+        </div>
+        <div class='d-flex gap-1 justify-center'>
+          <button class="btn btn-success btn-sm" onclick="window.open('whatsapp://send?text=' + encodeURI(createMessage()))" type="submit">
+            <i class="fa-brands fa-whatsapp"></i>
+            Send Message
+          </button>
+          <button class="btn btn-info btn-sm" onclick="navigator.share({'text':createMessage()})" type="submit">
+            <i class="fa-solid fa-share-from-square"></i>
+            Share Message
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="showMenu('shareCar')">
+            <i class="fa-solid fa-ban"></i>
+            Cancel Share
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
   <script>
     window.onload = setremarks
     function setremarks() {
@@ -183,10 +240,50 @@
     }
     function toCar(){
       if (confirm("Are sure you want to transfer ownership of this car?")) {
-  window.location = '/cars/{{ car["number"] }}/to'}}
-    function deleteCar(){
-      if (confirm("Are sure you want to delete this car?")) {
-  window.location = '/cars/{{ car["number"] }}/delete'}}
+        var today = new Date()
+        today = today.toISOString().split('T')[0]
+        var date = prompt('Please enter the date when the transfer was done. Make sure to enter in the format YYYY-MM-DD.',today)
+  window.location = '/cars/{{ car["number"] }}/to'+'/'+today}}
+    function deleteCar() {
+  var generatedNumbers = [];
+  for (var i = 0; i < 4; i++) {
+    generatedNumbers.push(Math.floor(Math.random() * 10));
+  }
+  alert('Generated Numbers: ' + generatedNumbers.join(', '));
+  var userInput = prompt('Enter the 4 numbers separated by commas:');
+  var userNumbers = userInput.split(',').map(Number);
+  var isValid = (userNumbers.length === 4 && JSON.stringify(userNumbers) === JSON.stringify(generatedNumbers));
+  if (isValid) {
+    if (confirm("Are sure you want to delete this car?")) {
+  window.location = '/cars/{{ car["number"] }}/delete';
+    alert('Car Deleted')}
+    
+  } else {
+    alert('Sorry, your input does not match the generated numbers. Try again');
+  }
+}
+    function check(ide) {
+      return document.getElementById(ide).checked
+    }
+    function createMessage() {
+      var number = '\n\`\`\`{{ car["numberHuman"] }}\`\`\`'
+      var cnumber = '\n*For more Details: 9943442555*'
+      var company = '\n*Service History : {{ car['serviceHistory'] }}*'
+      if (!check('numberCheck')) {
+        number = ''
+      }
+      if (!check('cnumberCheck')) {
+        cnumber = ''
+      }
+      if (!check('companyCheck')) {
+        company = ''
+      }
+      var price = document.getElementById('priceInput').value
+      var tyre = document.getElementById('tyreInput').value
+      var remarks = `{{ car["remarks"] }}`
+      var main = `*{{ car["model"] }}*${number}\n*Model Year: {{ car["modelYear"] }}*\n*Color: {{ car["color"] }}*\n*Odometer: {{ car["odometer"] }} KM*\n*No. of owners: {{ car["ownerNumber"] }}*\n*Fuel: {{ car["fuelType"] }}*\n*Transmission: {{ car["transmissionType"] }}*\n*Tyre Condition : ${tyre}%*\n*Insurance Upto : {{ car["insuranceDate"] }}*${company}\n▫️${remarks.split(',').join('\n▫️')}\n*Price : ₹ ${price}\n(Price Negotiable)*${cnumber}`
+      return main
+    }
   </script>
 {% endfor %}
 {% endblock %}

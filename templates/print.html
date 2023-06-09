@@ -9,8 +9,11 @@
   <script src="https://kit.fontawesome.com/f2ae8f17b1.js" crossorigin="anonymous"></script>
 </head>
 
-<body onload="window.print()">
-  <div class=" mt-4 pb-2 text-5xl text-center font-bold border-b-2">Viswa Cars</div>
+<body onload="setTimeout(function() {
+  window.rint()
+}, 2000);">
+  <div class='flex justify-between items-center p-2 border-b-2'><span class=" text-5xl font-bold">Viswa Cars</span><span class=" text-3xl font-bold">{{ serial }}</span></div>
+  
   <div class="flex justify-between align-center">
     <div class="mt-4 ms-2 flex flex-col">
       <span class="text-3xl font-bold">{{ car['model'] }}</span>
@@ -20,7 +23,7 @@
       src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://viswacars.pythonanywhere.com/cars/{{ car['number'] }}"
       class="m-3">
   </div>
-  <div class="mt-5 m-2 grid grid-cols-2 grid-rows-2 gap-1">
+  <div class="mt-5 m-2 grid grid-cols-2 grid-rows-1 gap-1">
     <div class="flex flex-col gap-2">
       <span class="text-xl font-bold"><i class="fa-solid fa-circle-info "></i> Basic Info</span>
       <table class=" border-collapse">
@@ -32,6 +35,10 @@
           <tr>
             <td class="border border-slate-300 p-1">Odometer</td>
             <td class="border border-slate-300 p-1">{{ car['odometer'] }}</td>
+          </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Owner Number</td>
+            <td class="border border-slate-300 p-1">{{ car['ownerNumber'] }}</td>
           </tr>
           <tr>
             <td class="border border-slate-300 p-1">Color</td>
@@ -64,6 +71,7 @@
         </tbody>
       </table>
     </div>
+    <div class='d-flex flex-column gap-1 justify-content-center'>
     <div class="flex flex-col gap-2">
       <span class="text-xl font-bold"><i class="fa-solid fa-cash-register"></i> Purchase Info</span>
       <table class=" border-collapse">
@@ -83,14 +91,6 @@
           <tr>
             <td class="border border-slate-300 p-1">Purchase Reference</td>
             <td class="border border-slate-300 p-1">{{ car['purchaseReference'] }}</td>
-          </tr>
-          <tr>
-            <td class="border border-slate-300 p-1">Owner Number</td>
-            <td class="border border-slate-300 p-1">{{ car['ownerNumber'] }}</td>
-          </tr>
-          <tr>
-            <td class="border border-slate-300 p-1">Remarks</td>
-            <td class="border border-slate-300 p-1 break-all">{{ car['remarks'] }}</td>
           </tr>
         </tbody>
       </table>
@@ -115,39 +115,34 @@
             <td class="border border-slate-300 p-1">Sale Reference</td>
             <td class="border border-slate-300 p-1">{{ car['saleReference'] }}</td>
           </tr>
+          {% if car['transferDone'] == 't' %}
           <tr>
             <td class="border border-slate-300 p-1">Transfer Done</td>
-            <td class="border border-slate-300 p-1">{% if car['transferDone'] == 't' %}
-            Yes
-              {% else %}
-              No
-              {% endif %}
-            </td>
+            <td class="border border-slate-300 p-1">Yes</td>
           </tr>
+          <tr>
+            <td class="border border-slate-300 p-1">Transfer Date</td>
+            <td class="border border-slate-300 p-1">{{ car['transferDate']}}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td class="border border-slate-300 p-1">Transfer Done</td>
+            <td class="border border-slate-300 p-1">No</td>
+          </tr>
+          {% endif %}
         </tbody>
       </table>
     </div>
-    <div class=" flex flex-col mt-3">
-      <div class="flex gap-1 justify-center">
-        <span class="text-xl font-bold"><i class="fa-solid fa-receipt"></i> Summary</span>
-      </div>
-      <table class="mx-auto mt-3">
-        <tbody>
-          <tr>
-            <td class="text-xl font-bold pr-2">Purchase Price</td>
-            <td>₹ {{ car['purchasePrice'] }}</td>
-          </tr>
-          <tr>
-            <td class="text-xl font-bold pr-2">Expenses</td>
-            <td>₹ {{ car['expenses'] }}</td>
-          </tr>
-          <tr>
-            <td class="text-xl font-bold pr-2">Sale Price</td>
-            <td>₹ {{ car['salePrice'] }}</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
+    <div class='d-flex flex-column m-2'>
+      <span class='text-xl font-bold'>
+        <i class="fa-solid fa-thumbtack"></i>
+        Remarks
+      </span>
+      <p class='text-lg mt-2'></p>
+      {{ car['remarks'] }}
+    </div>
+  </div>
 </body>
 
 </html>

@@ -14,6 +14,7 @@ class Cars(Model):
   chassisNumber = TextField()
   fuelType = TextField()
   transmissionType = TextField()
+  serviceHistory = TextField()
   purchasedFrom = TextField()
   purchasedOn = DateField()
   purchaseLocation = TextField()
@@ -24,6 +25,7 @@ class Cars(Model):
   soldLocation = TextField()
   saleReference = TextField()
   transferDone = TextField()
+  transferDate = DateField()
   insuranceDate = DateField()
   pollutionDate = DateField()
   fine = TextField()
@@ -38,7 +40,7 @@ class Cars(Model):
 db.connect()
 db.create_tables([Cars])
 
-def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber,fuelType,transmissionType,purchasedFrom,purchasedOn,purchaseLocation,purchaseReference,ownerNumber,purchasePrice,insuranceDate,pollutionDate):
+def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber,fuelType,transmissionType,purchasedFrom,purchasedOn,purchaseLocation,purchaseReference,ownerNumber,purchasePrice,insuranceDate,pollutionDate,serviceHistory):
   number = number.strip().replace(' ','').lower()
   if not validateCarNumber(number):
     return 'Invalid Car Number'
@@ -53,11 +55,12 @@ def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber
   transferDone = 'f'
   insuranceDate = date.fromisoformat(insuranceDate)
   pollutionDate = date.fromisoformat(pollutionDate)
+  transferDate = date.today()
   fine = 'No fines'
   expenses = 0
   salePrice = 0
   remarks = 'No remarks'
-  Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,purchasePrice=purchasePrice,expenses=expenses,salePrice=salePrice,remarks=remarks,fuelType=fuelType,transmissionType = transmissionType,saleReference=saleReference).save(force_insert=True)
+  Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,purchasePrice=purchasePrice,expenses=expenses,salePrice=salePrice,remarks=remarks,fuelType=fuelType,transmissionType = transmissionType,saleReference=saleReference,serviceHistory=serviceHistory,transferDate=transferDate).save(force_insert=True)
   return number
 
 def resp(data):
@@ -66,7 +69,6 @@ def resp(data):
     i = model_to_dict(i)
     i['numberHuman'] = parseCarNumber(i['number'])
     i['remarks'] = i['remarks'].replace('\n','')
-    i['message'] = f"*{i['model']}*\n📅 {i['modelYear']} model \n🔢 {i['odometer']} KM \n 🎨 {i['color']} color.\n 👤 {i['ownerNumber']} owner"
     resp.append(i)
   return resp
 
@@ -93,8 +95,8 @@ def editCar(number,newExpenses,newRemarks):
   db.commit()
   return True
 
-def transferCar(number):
-  Cars.update(transferDone='t').where(Cars.number == number).execute()
+def transferCar(number,dateDone):
+  Cars.update(transferDone='t',transferDate=date.fromisoformat(dateDone)).where(Cars.number == number).execute()
   db.commit()
   return True
 

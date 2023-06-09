@@ -4,9 +4,27 @@ import database
 from csv import writer
 from datetime import date
 
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+
+sentry_sdk.init(
+    dsn="https://2876f119c2564c02bc117e9dcdd38fc8@o4505329967955968.ingest.sentry.io/4505329973723136",
+    integrations=[
+        FlaskIntegration(),
+    ],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0
+)
+
 app = Flask('Svt')
 CORS(app)
 
+@app.route('/debug-sentry')
+def trigger_error():
+    division_by_zero = 1 / 0
 
 @app.route('/')
 def homePage():
@@ -26,9 +44,9 @@ def editCarPage(car):
   return redirect(f'/cars/{car}')
 
 
-@app.route('/cars/<car>/to')
-def toCarEndpoint(car):
-  database.transferCar(car)
+@app.route('/cars/<car>/to/<date>')
+def toCarEndpoint(car,date):
+  database.transferCar(car,date)
   return redirect(f'/cars/{car}')
 
 @app.route('/cars/<car>/sell')
@@ -69,7 +87,9 @@ def buyEndpoint():
 
 @app.route('/cars/<car>/print')
 def printPage(car):
-  return render_template('print.html',car=database.getCar(car)[0])
+  car = database.getCar(car)[0]
+  serial = car['purchasedOn'].strftime("%b/%Y").upper()
+  return render_template('print.html',car=car,serial = serial)
 
 @app.route('/cars/<car>/delete')
 def deleteCar(car):
