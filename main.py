@@ -4,27 +4,8 @@ import database
 from csv import writer
 from datetime import date
 
-import sentry_sdk
-from sentry_sdk.integrations.flask import FlaskIntegration
-
-sentry_sdk.init(
-    dsn="https://2876f119c2564c02bc117e9dcdd38fc8@o4505329967955968.ingest.sentry.io/4505329973723136",
-    integrations=[
-        FlaskIntegration(),
-    ],
-
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0
-)
-
 app = Flask('Svt')
 CORS(app)
-
-@app.route('/debug-sentry')
-def trigger_error():
-    division_by_zero = 1 / 0
 
 @app.route('/')
 def homePage():
