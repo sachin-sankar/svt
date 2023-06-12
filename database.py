@@ -29,9 +29,6 @@ class Cars(Model):
   insuranceDate = DateField()
   pollutionDate = DateField()
   fine = TextField()
-  purchasePrice = IntegerField()
-  expenses = IntegerField()
-  salePrice = IntegerField()
   remarks = TextField()
 
   class Meta:
@@ -40,7 +37,7 @@ class Cars(Model):
 db.connect()
 db.create_tables([Cars])
 
-def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber,fuelType,transmissionType,purchasedFrom,purchasedOn,purchaseLocation,purchaseReference,ownerNumber,purchasePrice,insuranceDate,pollutionDate,serviceHistory):
+def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber,fuelType,transmissionType,purchasedFrom,purchasedOn,purchaseLocation,purchaseReference,ownerNumber,insuranceDate,pollutionDate,serviceHistory,fine):
   number = number.strip().replace(' ','').lower()
   if not validateCarNumber(number):
     return 'Invalid Car Number'
@@ -57,10 +54,8 @@ def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber
   pollutionDate = date.fromisoformat(pollutionDate)
   transferDate = date.today()
   fine = 'No fines'
-  expenses = 0
-  salePrice = 0
   remarks = 'No remarks'
-  Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,purchasePrice=purchasePrice,expenses=expenses,salePrice=salePrice,remarks=remarks,fuelType=fuelType,transmissionType = transmissionType,saleReference=saleReference,serviceHistory=serviceHistory,transferDate=transferDate).save(force_insert=True)
+  Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,remarks=remarks,fuelType=fuelType,transmissionType = transmissionType,saleReference=saleReference,serviceHistory=serviceHistory,transferDate=transferDate).save(force_insert=True)
   return number
 
 def resp(data):
@@ -79,18 +74,18 @@ def getAllCars():
   return resp(Cars.select())
     
 def getUnsoldCars():
-  return resp(Cars.select().where(Cars.salePrice == 0))
+  return resp(Cars.select().where(Cars.soldTo == ''))
 
 def getUntransferedCars():
-  return resp(Cars.select().where(Cars.salePrice != 0, Cars.transferDone == 'f'))
+  return resp(Cars.select().where(Cars.soldTo != '', Cars.transferDone == 'f'))
 
 def searchCars(searchText):
   return resp(Cars.select().where(
     (Cars.model.contains(searchText))|(Cars.modelYear.contains(searchText))|
     (Cars.color.contains(searchText))|(Cars.number.contains(searchText))))
 
-def editCar(number,newExpenses,newRemarks):
-  q = Cars.update(remarks=newRemarks,expenses=newExpenses)
+def editCar(number,newRemarks):
+  q = Cars.update(remarks=newRemarks)
   q.where(Cars.number == number).execute()
   db.commit()
   return True
@@ -100,11 +95,11 @@ def transferCar(number,dateDone):
   db.commit()
   return True
 
-def sellCar(number,soldTo,soldOn,soldLocation,insuranceDate,pollutionDate,expenses,salePrice,remarks,saleReference):
+def sellCar(number,soldTo,soldOn,soldLocation,insuranceDate,pollutionDate,remarks,saleReference):
   insuranceDate = date.fromisoformat(insuranceDate)
   pollutionDate = date.fromisoformat(pollutionDate)
   soldOn = date.fromisoformat(soldOn)
-  Cars.update(soldTo=soldTo,soldOn=soldOn,soldLocation=soldLocation,insuranceDate=insuranceDate,pollutionDate=pollutionDate,expenses=expenses,salePrice=salePrice,remarks=remarks,saleReference=saleReference).where(Cars.number == number).execute()
+  Cars.update(soldTo=soldTo,soldOn=soldOn,soldLocation=soldLocation,insuranceDate=insuranceDate,pollutionDate=pollutionDate,remarks=remarks,saleReference=saleReference).where(Cars.number == number).execute()
   db.commit()
   return True
 
