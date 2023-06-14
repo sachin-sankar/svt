@@ -2,6 +2,7 @@ from peewee import *
 from playhouse.shortcuts import model_to_dict
 from datetime import date
 from helper import validateCarNumber , parseCarNumber
+import webhook
 db = SqliteDatabase('svt.db')
 
 class Cars(Model):
@@ -37,6 +38,20 @@ class Cars(Model):
 db.connect()
 db.create_tables([Cars])
 
+
+commits = 0
+
+def commit():
+  db.commit()
+  global commits
+  commits += 1
+  print(commits)
+  if commits >= 3:
+    webhook.sendBackup()
+    commits = 0
+  else:
+    return
+
 def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber,fuelType,transmissionType,purchasedFrom,purchasedOn,purchaseLocation,purchaseReference,ownerNumber,insuranceDate,pollutionDate,serviceHistory,fine):
   number = number.strip().replace(' ','').lower()
   if not validateCarNumber(number):
@@ -56,6 +71,7 @@ def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber
   fine = 'No fines'
   remarks = 'No remarks'
   Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,remarks=remarks,fuelType=fuelType,transmissionType = transmissionType,saleReference=saleReference,serviceHistory=serviceHistory,transferDate=transferDate).save(force_insert=True)
+  commit()
   return number
 
 def resp(data):
@@ -87,12 +103,12 @@ def searchCars(searchText):
 def editCar(number,newRemarks):
   q = Cars.update(remarks=newRemarks)
   q.where(Cars.number == number).execute()
-  db.commit()
+  commit()
   return True
 
 def transferCar(number,dateDone):
   Cars.update(transferDone='t',transferDate=date.fromisoformat(dateDone)).where(Cars.number == number).execute()
-  db.commit()
+  commit()
   return True
 
 def sellCar(number,soldTo,soldOn,soldLocation,insuranceDate,pollutionDate,remarks,saleReference):
@@ -100,10 +116,10 @@ def sellCar(number,soldTo,soldOn,soldLocation,insuranceDate,pollutionDate,remark
   pollutionDate = date.fromisoformat(pollutionDate)
   soldOn = date.fromisoformat(soldOn)
   Cars.update(soldTo=soldTo,soldOn=soldOn,soldLocation=soldLocation,insuranceDate=insuranceDate,pollutionDate=pollutionDate,remarks=remarks,saleReference=saleReference).where(Cars.number == number).execute()
-  db.commit()
+  commit()
   return True
 
 def deleteCar(number):
   Cars.delete().where(Cars.number == number).execute()
-  db.commit()
+  commit()
   return True

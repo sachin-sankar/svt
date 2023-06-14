@@ -15,6 +15,14 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "charset-normalizer"
+version = "3.1.0"
+description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
+category = "main"
+optional = false
+python-versions = ">=3.7.0"
+
+[[package]]
 name = "click"
 version = "8.1.3"
 description = "Composable command line interface toolkit"
@@ -32,6 +40,20 @@ description = "Cross-platform colored terminal text."
 category = "main"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
+
+[[package]]
+name = "discord-webhook"
+version = "1.1.0"
+description = "execute discord webhooks"
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[package.dependencies]
+requests = ">=2.28.1,<3.0.0"
+
+[package.extras]
+async = ["httpx (>=0.23.0,<0.24.0)"]
 
 [[package]]
 name = "flask"
@@ -63,6 +85,14 @@ python-versions = "*"
 [package.dependencies]
 Flask = ">=0.9"
 Six = "*"
+
+[[package]]
+name = "idna"
+version = "3.4"
+description = "Internationalized Domain Names in Applications (IDNA)"
+category = "main"
+optional = false
+python-versions = ">=3.5"
 
 [[package]]
 name = "itsdangerous"
@@ -101,6 +131,24 @@ description = "a little orm"
 category = "main"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "requests"
+version = "2.31.0"
+description = "Python HTTP for Humans."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+certifi = ">=2017.4.17"
+charset-normalizer = ">=2,<4"
+idna = ">=2.5,<4"
+urllib3 = ">=1.21.1,<3"
+
+[package.extras]
+socks = ["PySocks (>=1.5.6,!=1.5.7)"]
+use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "sentry-sdk"
@@ -180,19 +228,23 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "1d58155c45d8ce4623cf01861641e334da781e45767544cb0cac7ce659d8d0f7"
+content-hash = "d4d36ffd32100d485c0c833fe4f842c81369b97a75b565d28a44ac8893b03b0c"
 
 [metadata.files]
 blinker = []
 certifi = []
+charset-normalizer = []
 click = []
 colorama = []
+discord-webhook = []
 flask = []
 flask-cors = []
+idna = []
 itsdangerous = []
 jinja2 = []
 markupsafe = []
 peewee = []
+requests = []
 sentry-sdk = []
 six = []
 urllib3 = []

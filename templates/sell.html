@@ -48,6 +48,7 @@
   <script>
     window.onload = setremarks
     function setremarks() {
+      login()
       var ele = document.getElementById('exampleFormControlTextarea1')
       ele.value = '{{ car["remarks"] }}'
       var today = new Date()

@@ -21,7 +21,7 @@ def viewCarPage(car):
 
 @app.route('/cars/<car>/edit', methods=['POST'])
 def editCarPage(car):
-  database.editCar(car, request.form['expenses'], request.form['remarks'])
+  database.editCar(car, request.form['remarks'])
   return redirect(f'/cars/{car}')
 
 
@@ -76,7 +76,16 @@ def printPage(car):
 def deleteCar(car):
   database.deleteCar(car)
   return redirect('/')
-  
+
+@app.route('/verify',methods=['post'])
+def verifyUser():
+  data = request.get_json()['pw']
+  print(data)
+  if data == 'admin':
+    return '',200
+  else:
+    return '',403
+
 @app.route('/ping')
 def ping():
   return 'pong'

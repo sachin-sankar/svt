@@ -204,6 +204,7 @@
   <script>
     window.onload = setremarks
     function setremarks() {
+      login()
       var ele = document.getElementById('exampleFormControlTextarea1')
       ele.value = `{{ car["remarks"] }}`
     }
@@ -241,7 +242,7 @@
     function createMessage() {
       var number = '\n\`\`\`{{ car["numberHuman"] }}\`\`\`'
       var cnumber = '\n*For more Details: 9943442555*'
-      var company = '\n*Service History : {{ car['serviceHistory'] }}*'
+      var company = '\n*Service History : {{ car['serviceHistory'].strip() }}*'
       if (!check('numberCheck')) {
         number = ''
       }
