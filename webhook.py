@@ -19,5 +19,5 @@ def sendBackup():
   with open("svt.db", "rb") as f:
       webhook.add_file(file=f.read(), filename='svt.db')
   r = webhook.execute()
-  if r.status_code == 200:
+  if r.status_code != 200:
     sendError({'Error Type':'HTTP Error','Error Code':str(r.status_code),'Error Impact':'Failure of scheduled Backup'})

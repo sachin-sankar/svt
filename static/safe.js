@@ -4,7 +4,7 @@ function login(){
     if ( password == null){
       password = prompt('Enter Password')
     }
-    fetch('https://svt.sachins5.repl.co/verify',{method: 'POST',
+    fetch('https://viswacars.pythonanywhere.com/verify',{method: 'POST',
   headers: {
     'Content-Type': 'application/json'
   },

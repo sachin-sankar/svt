@@ -4,7 +4,7 @@ import database
 from csv import writer
 from datetime import date
 
-app = Flask('Svt')
+app = Flask('Svt',,template_folder='mysite/templates',static_folder='mysite/static')
 CORS(app)
 
 @app.route('/')
@@ -89,5 +89,3 @@ def verifyUser():
 @app.route('/ping')
 def ping():
   return 'pong'
-
-app.run('0.0.0.0', port=8080)

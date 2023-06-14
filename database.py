@@ -47,7 +47,10 @@ def commit():
   commits += 1
   print(commits)
   if commits >= 3:
-    webhook.sendBackup()
+    try:
+      webhook.sendBackup()
+    except Exception as e:
+      webhook.sendError({'Error Type':'Exception','Error':f'```{str(e)}```','Locals':f'```py {locals()}```'})
     commits = 0
   else:
     return
