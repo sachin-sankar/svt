@@ -4,7 +4,7 @@ import database
 from csv import writer
 from datetime import date
 
-app = Flask('Svt',,template_folder='mysite/templates',static_folder='mysite/static')
+app = Flask('Svt',template_folder='mysite/templates',static_folder='mysite/static')
 CORS(app)
 
 @app.route('/')

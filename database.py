@@ -16,6 +16,8 @@ class Cars(Model):
   fuelType = TextField()
   transmissionType = TextField()
   serviceHistory = TextField()
+  spareKey = TextField()
+  userManual = TextField()
   purchasedFrom = TextField()
   purchasedOn = DateField()
   purchaseLocation = TextField()
@@ -55,7 +57,7 @@ def commit():
   else:
     return
 
-def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber,fuelType,transmissionType,purchasedFrom,purchasedOn,purchaseLocation,purchaseReference,ownerNumber,insuranceDate,pollutionDate,serviceHistory,fine):
+def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber,fuelType,transmissionType,purchasedFrom,purchasedOn,purchaseLocation,purchaseReference,ownerNumber,insuranceDate,pollutionDate,serviceHistory,fine,spareKey='No',userManual="No"):
   number = number.strip().replace(' ','').lower()
   if not validateCarNumber(number):
     return 'Invalid Car Number'
@@ -73,7 +75,7 @@ def purchaseCar(number,model,modelYear,odometer,color,engineNumber,chassisNumber
   transferDate = date.today()
   fine = 'No fines'
   remarks = 'No remarks'
-  Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,remarks=remarks,fuelType=fuelType,transmissionType = transmissionType,saleReference=saleReference,serviceHistory=serviceHistory,transferDate=transferDate).save(force_insert=True)
+  Cars(number=number,model=model,modelYear=modelYear,odometer=odometer,color=color,engineNumber=engineNumber,chassisNumber=chassisNumber,purchasedFrom=purchasedFrom,purchasedOn=purchasedOn,purchaseLocation=purchaseLocation,purchaseReference=purchaseReference,ownerNumber=ownerNumber,soldLocation=soldLocation,soldOn=soldOn,soldTo=soldTo,transferDone=transferDone,insuranceDate=insuranceDate,pollutionDate=pollutionDate,fine=fine,remarks=remarks,fuelType=fuelType,transmissionType = transmissionType,saleReference=saleReference,serviceHistory=serviceHistory,transferDate=transferDate,spareKey=spareKey,userManual=userManual).save(force_insert=True)
   commit()
   return number
 
